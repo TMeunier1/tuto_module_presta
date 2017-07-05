@@ -39,19 +39,23 @@ class MyModule extends Module
 
     public function hookDisplayLeftColumn($params)
     {
+        $productObj = new Product();
+        $products = $productObj->getProducts(Context::getContext()->language->id, 0, 0, 'id_product', 'DESC', false, true );
+		$total = count($products);
         $this->context->smarty->assign(
             array(
                 'my_module_name' => Configuration::get('MYMODULE_NAME'),
-                'my_module_link' => $this->context->link->getModuleLink('mymodule', 'display')
+                'my_module_link' => $this->context->link->getModuleLink('mymodule', 'display'),
+                'my_module_total' => $total
                 )
         );
-            return $this->display(_PS_MODULE_DIR_."mymodule/mymodule.php", 'mymodule.tpl');
+        return $this->display(_PS_MODULE_DIR_."mymodule/mymodule.php", 'mymodule.tpl');
     }
 
-        public function hookDisplayHeader()
-        {
-            $this->context->controller->addCSS($this->_path.'css/mymodule.css', 'all');
-        }
+    public function hookDisplayHeader()
+    {
+        $this->context->controller->addCSS($this->_path.'css/mymodule.css', 'all');
+    }
 
     public function hookDisplayRightColumn($params)
     {
@@ -77,9 +81,7 @@ class MyModule extends Module
                 || !Validate::isGenericName($my_module_name)
             ) {
                 $output .= $this->displayError($this->l('Invalid Configuration value'));
-            }
-            else
-            {
+            } else {
                 Configuration::updateValue('MYMODULE_NAME', $my_module_name);
                 $output .= $this->displayConfirmation($this->l('Settings updated'));
             }
