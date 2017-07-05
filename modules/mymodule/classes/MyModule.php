@@ -37,11 +37,6 @@ class MyModule extends Module
         return true;
     }
 
-    public function hookDisplayHeader()
-    {
-        $this->context->controller->addCSS($this->_path.'css/mymodule.css', 'all');
-    }
-
     public function hookDisplayLeftColumn($params)
     {
         $this->context->smarty->assign(
@@ -50,8 +45,13 @@ class MyModule extends Module
                 'my_module_link' => $this->context->link->getModuleLink('mymodule', 'display')
                 )
         );
-            return $this->display(__FILE__, 'mymodule.tpl');
+            return $this->display(_PS_MODULE_DIR_."mymodule/mymodule.php", 'mymodule.tpl');
     }
+
+        public function hookDisplayHeader()
+        {
+            $this->context->controller->addCSS($this->_path.'css/mymodule.css', 'all');
+        }
 
     public function hookDisplayRightColumn($params)
     {
