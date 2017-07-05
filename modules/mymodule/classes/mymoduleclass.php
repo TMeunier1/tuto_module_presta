@@ -37,6 +37,27 @@ class MyModule extends Module
         return true;
     }
 
+    public function hookDisplayHeader()
+    {
+        $this->context->controller->addCSS($this->_path.'css/mymodule.css', 'all');
+    }
+
+    public function hookDisplayLeftColumn($params)
+    {
+        $this->context->smarty->assign(
+            array(
+                'my_module_name' => Configuration::get('MYMODULE_NAME'),
+                'my_module_link' => $this->context->link->getModuleLink('mymodule', 'display')
+                )
+        );
+            return $this->display(__FILE__, 'mymodule.tpl');
+    }
+
+    public function hookDisplayRightColumn($params)
+    {
+        return $this->hookDisplayLeftColumn($params);
+    }
+
     public function uninstall()
     {
         if (!parent::uninstall()) {
@@ -44,6 +65,7 @@ class MyModule extends Module
         }
         return true;
     }
+
     public function getContent()
     {
         $output = null;
@@ -54,7 +76,7 @@ class MyModule extends Module
                 || empty($my_module_name)
                 || !Validate::isGenericName($my_module_name)
             ) {
-                $output .= $this->displayError($this->l('Invalid Configuration value')); 
+                $output .= $this->displayError($this->l('Invalid Configuration value'));
             }
             else
             {
@@ -64,6 +86,7 @@ class MyModule extends Module
         }
         return $output.$this->displayForm();
     }
+
     public function displayForm()
     {
         // Get default language
