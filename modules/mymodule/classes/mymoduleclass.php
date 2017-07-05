@@ -48,13 +48,14 @@ class MyModule extends Module
     {
         $output = null;
 
-        if (Tools::isSubmit('submit'.$this->name))
-        {
+        if (Tools::isSubmit('submit'.$this->name)) {
             $my_module_name = strval(Tools::getValue('MYMODULE_NAME'));
             if (!$my_module_name
-              || empty($my_module_name)
-              || !Validate::isGenericName($my_module_name))
-                $output .= $this->displayError($this->l('Invalid Configuration value'));
+                || empty($my_module_name)
+                || !Validate::isGenericName($my_module_name)
+            ) {
+                $output .= $this->displayError($this->l('Invalid Configuration value')); 
+            }
             else
             {
                 Configuration::updateValue('MYMODULE_NAME', $my_module_name);
